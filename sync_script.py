@@ -72,8 +72,8 @@ def generate_content_with_failover(prompt: str) -> str:
 # ==========================================
 async def scrape_via_httpx(nim: str, password: str) -> str:
     logger.info("🚀 [ENGINE 1] Memulai percobaan via HTTPX + BeautifulSoup...")
-    login_url = "https://mtu.ac.id"
-    nilai_url = "https://mtu.ac.id"
+    login_url = "https://siakad.mtu.ac.id"
+    nilai_url = "https://siakad.mtu.ac.id"
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
     
     async with httpx.AsyncClient(follow_redirects=True, timeout=15.0) as client:
@@ -110,7 +110,7 @@ async def run_playwright_scraper(nim: str, password: str) -> str:
             page = await context.new_page()
             
             logger.info("🔗 Membuka halaman login siakad.mtu.ac.id")
-            await page.goto("https://mtu.ac.id", timeout=30000)
+            await page.goto("https://siakad.mtu.ac.id", timeout=30000)
             
             logger.info("⌨️ Mengisi form username dan password...")
             await page.fill("input[name='username']", nim)
@@ -123,7 +123,7 @@ async def run_playwright_scraper(nim: str, password: str) -> str:
             )
             
             logger.info("📄 Mengalihkan browser ke halaman nilai akademik...")
-            await page.goto("https://mtu.ac.id", wait_until="domcontentloaded")
+            await page.goto("https://siakad.mtu.ac.id", wait_until="domcontentloaded")
             
             raw_text = await page.locator("body").inner_text()
             logger.info("✅ [ENGINE 2 SUCCESS] Konten halaman sukses diekstrak oleh Playwright!")
