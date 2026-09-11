@@ -24,12 +24,15 @@ jobs:
         pip install playwright supabase python-dotenv google-genai requests
         playwright install chromium
 
-    - name: Run Scraper Script
+        - name: Run Scraper Script
       env:
-        # Menarik kredensial aman dari GitHub Secrets
         GITHUB_ACTIONS: "true"
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         GEMINI_PRIMARY_KEY: ${{ secrets.GEMINI_PRIMARY_KEY }}
         GEMINI_BACKUP_KEY: ${{ secrets.GEMINI_BACKUP_KEY }}
+        # Tambahkan dua baris di bawah ini:
+        SIAKAD_USER: ${{ secrets.SIAKAD_USER }}
+        SIAKAD_PASSWORD: ${{ secrets.SIAKAD_PASSWORD }}
       run: python sync_script.py
+
