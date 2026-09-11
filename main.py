@@ -81,21 +81,27 @@ async def run_playwright_scraper(nim: str, password: str) -> str:
             )
             page = await context.new_page()
             
+            logger.info("🔗 Membuka halaman login SIAKAD...")
             await page.goto("https://siakad.mtu.ac.id/index.php/login", timeout=30000, wait_until="domcontentloaded")
             await page.screenshot(path="debug_login.png")
             
+            logger.info("⌨️ Mengisi form login...")
             await page.fill("input[name='identity']", nim, timeout=10000)
             await page.fill("input[name='password']", password, timeout=10000)
             
-            await asyncio.gather(
-                page.wait_for_navigation(wait_until="networkidle"),
-                page.click("button[type='submit']")
-            )
+            logger.info("🚀 Mengirim form dengan menekan Enter...")
+            # Menggunakan expect_navigation (sintaks Python yang benar) + trigger Enter
+            async with page.expect_navigation(wait_until="domcontentloaded", timeout=25000):
+                await page.press("input[name='password']", "Enter")
+            
+            # Beri jeda 3 detik untuk memastikan halaman dashboard selesai render UI
+            await page.wait_for_timeout(3000)
             
             await page.screenshot(path="debug_after_login.png")
             raw_text = await page.locator("body").inner_text()
             await browser.close()
             return raw_text
+            
         except Exception as e:
             try:
                 await page.screenshot(path="error_playwright.png")
