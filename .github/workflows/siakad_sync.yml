@@ -34,3 +34,11 @@ jobs:
         SIAKAD_USER: ${{ secrets.SIAKAD_USER }}
         SIAKAD_PASSWORD: ${{ secrets.SIAKAD_PASSWORD }}
       run: python sync_script.py
+
+      - name: Upload Debug Screenshots
+      if: always() # Selalu jalankan walau script error/berhasil
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-debug-screenshots
+        path: "*.png"
+        retention-days: 1
